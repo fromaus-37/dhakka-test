@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm format
-npm lint:js
+npm run format
+npm run lint:js
 
