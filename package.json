@@ -1,15 +1,33 @@
 {
   "name": "dhakka",
   "version": "1.0.2",
-  "description": "",
+  "description": "Dhakka ('push start' in Urdu/Hindi) is a command line utility for creating a React application with a webpack-based setup that is minimal, transparent and customisable",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "lint:js": "eslint .",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bin": {
     "dhakka": "./dhakka"
+  },
+  "devDependencies": {
+    "eslint": "8.24.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-jest": "27.1.1",
+    "gitignore": "0.7.0",
+    "husky": "8.0.1",
+    "jest": "29.1.2",
+    "debugger-is-attached": "1.2.0",
+    "prettier": "2.7.1"
+  },
+  "dependencies": {
+    "commander": "9.4.1",
+    "uuid": "9.0.0"
   }
 }
