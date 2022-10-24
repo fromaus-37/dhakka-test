@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { exec } = require('node:child_process');
 
 /*
@@ -52,39 +53,164 @@ function scaffold(appPath, scaffoldCommand, callback) {
   }
 }
 
+function getMerge(continuation, mergeCount) {
+  let count = 0;
+
+  return (err) => {
+    if (err) {
+      continuation(err);
+    } else {
+      count++;
+      if (count === mergeCount) {
+        continuation();
+      }
+    }
+  };
+}
+
 function scaffoldReactCommand(appPath, callback) {
   const scaffoldCommands = [
     `cd ${appPath}`,
     `npm init -y`,
-    `npm install --save-dev --save-exact eslint eslint-config-prettier prettier`,
-    `npx gitignore VisualStudio`,
+    `npm install --save-dev --save-exact eslint eslint-config-prettier prettier jest eslint-plugin-jest debugger-is-attached husky`,
+    `npx gitignore Node`,
   ];
 
-  const scaffoldScript = scaffoldCommands.reduce(
-    (previous, current) => `${previous} && ${current}`
-  );
+  const concatCommandsIntoScript = (commands) =>
+    commands.reduce((previous, current) => `${previous} && ${current}`);
 
-  /*
+  const installHuskyCommands = [
+    `cd ${appPath}`,
+    `git init`,
+    `npm run prepare`,
+    `npx husky add .husky/pre-commit "npm run format"`,
+    `npx husky add .husky/pre-commit "npm run lint:js"`,
+  ];
+
+  const merge_initnpm_copyfiles_modgitignore = getMerge(callback, 3);
+
+  const completeNPMPackageInstall = () => {
+    try {
+      const packageJsonPath = path.join(appPath, 'package.json');
+      fs.readFile(packageJsonPath, (err, data) => {
+        if (err) {
+          merge_initnpm_copyfiles_modgitignore(err);
+        } else {
+          try {
+            const packageObject = JSON.parse(data);
+            packageObject.scripts = {
+              test: 'jest',
+              'lint:js': 'eslint .',
+              lint: 'eslint . && prettier --check .',
+              format: 'prettier --write .',
+              prepare: 'husky install',
+            };
+            fs.writeFile(
+              packageJsonPath,
+              JSON.stringify(packageObject),
+              (err) => {
+                if (err) {
+                  merge_initnpm_copyfiles_modgitignore(err);
+                } else {
+                  exec(
+                    concatCommandsIntoScript(installHuskyCommands),
+                    merge_initnpm_copyfiles_modgitignore
+                  );
+                }
+              }
+            );
+          } catch (err) {
+            merge_initnpm_copyfiles_modgitignore(err);
+          }
+        }
+      });
+    } catch (err) {
+      merge_initnpm_copyfiles_modgitignore(err);
+    }
+  };
+
+  const addVscodeToGitignore = () => {
+    fs.appendFile(
+      path.join(appPath, '.gitignore'),
+      `.vscode`,
+      merge_initnpm_copyfiles_modgitignore
+    );
+  };
+
+  exec(concatCommandsIntoScript(scaffoldCommands), (err) => {
+    if (err) {
+      merge_initnpm_copyfiles_modgitignore(err);
+    } else {
+      completeNPMPackageInstall();
+      addVscodeToGitignore();
+    }
+  }).stdout.pipe(process.stdout);
+
+  const directoriesToCreate = [
+    path.join(appPath, 'tests/integrationTests'),
+    path.join(appPath, 'tests/unitTests'),
+  ];
+
   const filesToCopy = [
     {
       source: './scaffoldFiles/node/.eslintrc.js',
       dest: path.join(appPath, '.eslintrc.js'),
     },
+    {
+      source: './scaffoldFiles/node/.prettierrc.json',
+      dest: path.join(appPath, '.prettierrc.json'),
+    },
+    {
+      source: './scaffoldFiles/node/.prettierignore',
+      dest: path.join(appPath, '.prettierignore'),
+    },
+    {
+      source: './scaffoldFiles/node/jest.config.js',
+      dest: path.join(appPath, 'jest.config.js'),
+    },
+    {
+      source: './scaffoldFiles/node/tests/.eslintrc.js',
+      dest: path.join(appPath, 'tests/.eslintrc.js'),
+    },
+    {
+      source: './scaffoldFiles/node/tests/unitTests/jestSetup.js',
+      dest: path.join(appPath, 'tests/unitTests/jestSetup.js'),
+    },
+    {
+      source: './scaffoldFiles/node/tests/integrationTests/jestSetup.js',
+      dest: path.join(appPath, 'tests/integrationTests/jestSetup.js'),
+    },
   ];
-  */
 
-  exec(scaffoldScript, (err) => {
+  const merge_copyfiles = getMerge(
+    merge_initnpm_copyfiles_modgitignore,
+    filesToCopy.length
+  );
+
+  const copyFiles = (err) => {
     if (err) {
-      callback(err);
+      merge_copyfiles(err);
     } else {
-      // fs.copyFile(
-      //   ,
-      //   ,
-      //   callback
-      // );
-      callback();
+      filesToCopy.forEach((copySpec) => {
+        fs.copyFile(copySpec.source, copySpec.dest, (err) => {
+          if (err) {
+            merge_copyfiles(err);
+          } else {
+            merge_copyfiles();
+          }
+        });
+      });
     }
-  }).stdout.pipe(process.stdout);
+  };
+
+  const merge_directoriesToCreate = getMerge(
+    copyFiles,
+    directoriesToCreate.length
+  );
+
+  directoriesToCreate.forEach((dirPath) => {
+    fs.mkdir(dirPath, { recursive: true }, merge_directoriesToCreate);
+  });
 }
 
 module.exports = {

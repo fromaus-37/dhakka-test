@@ -32,6 +32,26 @@ describe('scaffoldReact', () => {
           `Expected ${receivedFilePath} to to be of size ${fileStats.size}`,
       };
     },
+    toHaveLines: (receivedFilePath, linesToMatch) => {
+      const fileText = fs.readFileSync(receivedFilePath) + '';
+      const numLinesToMatch = linesToMatch.length;
+      let numLinesMatched = 0;
+
+      const linesInFile = fileText.split('\n');
+
+      for (const line of linesInFile) {
+        if (numLinesMatched === numLinesToMatch) break;
+        const trimmedLine = line.trim();
+        if (linesToMatch.find((lineToMatch) => trimmedLine === lineToMatch))
+          numLinesMatched++;
+      }
+
+      return {
+        pass: numLinesMatched === numLinesToMatch,
+        message: () =>
+          `Expected to match ${numLinesToMatch} lines in file ${receivedFilePath} but only matched ${numLinesMatched}`,
+      };
+    },
   });
 
   const testGeneratesAReactApp = 'generates a React app';
@@ -43,19 +63,55 @@ describe('scaffoldReact', () => {
     );
     scaffolder.scaffold(appPath, scaffolder.scaffoldReactCommand, (err) => {
       try {
-        console.log(err);
+        if (err) {
+          console.log(err);
+          done(err);
+          return;
+        }
+
         expect(fs.existsSync(appPath)).toBe(true);
-        expect(path.join(appPath, 'package.json')).toBeFileWithContent();
-        //TODO: Check package.json for installed packages
 
-        //TODO: test that gitignore file contains `.vscode
-        // (and only once, in case it was already part of what
-        // gitignore created from GitHub copy).
+        const packageJsonPath = path.join(appPath, 'package.json');
+        expect(packageJsonPath).toBeFileWithContent();
 
-        expect(path.join(appPath, '.gitignore')).toBeFileWithContent();
+        const packageObject = require(packageJsonPath);
+        expect(packageObject.scripts.test).toBe('jest');
+        expect(packageObject.scripts.format).toContain('prettier');
+        expect(packageObject.scripts.lint).toContain('eslint .');
+        expect(packageObject.scripts['lint:js']).toBe('eslint .');
+
+        expect(path.join(appPath, '.gitignore')).toHaveLines(['.vscode']);
+
         expect(path.join(appPath, '.eslintrc.js')).toBeFileWithContent();
         expect(path.join(appPath, '.prettierrc.json')).toBeFileWithContent();
         expect(path.join(appPath, '.prettierignore')).toBeFileWithContent();
+
+        //expect Jest correctly installed and configured
+        expect(packageObject.devDependencies).toHaveProperty('jest');
+        expect(packageObject.devDependencies).toHaveProperty(
+          'eslint-plugin-jest'
+        );
+        expect(path.join(appPath, 'tests/.eslintrc.js')).toBeFileWithContent();
+        expect(packageObject.scripts['test']).toBe('jest');
+        expect(path.join(appPath, 'jest.config.js')).toBeFileWithContent();
+        expect(
+          path.join(appPath, 'tests/integrationTests/jestSetup.js')
+        ).toBeFileWithContent();
+        expect(
+          path.join(appPath, 'tests/unitTests/jestSetup.js')
+        ).toBeFileWithContent();
+        expect(packageObject.devDependencies).toHaveProperty(
+          'debugger-is-attached'
+        );
+
+        //expect husky correctly installed
+        expect(packageObject.devDependencies).toHaveProperty('husky');
+        expect(packageObject.scripts.prepare).toBe('husky install');
+        expect(path.join(appPath, '.husky/pre-commit')).toHaveLines([
+          'npm run format',
+          'npm run lint:js',
+        ]);
+
         done();
       } catch (error) {
         done(error);
