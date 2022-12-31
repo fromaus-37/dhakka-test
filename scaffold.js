@@ -180,14 +180,10 @@ function scaffoldNodeCommand(appPath, callback) {
       source: '/scaffoldFiles/node/tests/integrationTests/jestSetup.js',
       dest: path.join(appPath, 'tests/integrationTests/jestSetup.js'),
     },
-  ].map( obj =>
-      (
-        {
-          source: __dirname + obj.source,
-          dest: obj.dest
-        }
-      )
-      );
+  ].map((obj) => ({
+    source: __dirname + obj.source,
+    dest: obj.dest,
+  }));
 
   const merge_copyfiles = getMerge(
     merge_initnpm_copyfiles_modgitignore,
