@@ -58,9 +58,7 @@ describe('scaffold', () => {
 
   it(`${testGeneratesANodeApp}`, (done) => {
     const appPath = getNewAppPath();
-    console.log(
-      `test '${testGeneratesANodeApp}' is scaffolding to ${appPath}`
-    );
+    console.log(`test '${testGeneratesANodeApp}' is scaffolding to ${appPath}`);
     scaffolder.scaffold(appPath, scaffolder.scaffoldNodeCommand, (err) => {
       try {
         if (err) {

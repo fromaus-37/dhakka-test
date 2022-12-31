@@ -24,13 +24,13 @@ program
   .action((path, options /*, command*/) => {
     if (options.node) {
       scaffold(path, scaffoldNodeCommand, (err) => {
-        console.log("An error occured while generating the app:")
-        console.log("");
-        console.log("----" + err);
+        console.log('An error occured while generating the app:');
+        console.log('');
+        console.log('----' + err);
       });
     } else {
       //scaffoldReact(path);
-      console.log("Option not supported at the moment.");
+      console.log('Option not supported at the moment.');
     }
   });
 
