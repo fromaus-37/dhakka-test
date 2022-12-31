@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const tempfolder = require('../utils/tempfolder');
 
-describe('scaffoldReact', () => {
-  const getNewAppPath = tempfolder.initializeTempFolder('reactUnitTests');
+describe('scaffold', () => {
+  const getNewAppPath = tempfolder.initializeTempFolder('scaffoldUnitTests');
 
   expect.extend({
     toBeFileWithContent: (receivedFilePath, minFileSize = 1) => {
@@ -54,14 +54,14 @@ describe('scaffoldReact', () => {
     },
   });
 
-  const testGeneratesAReactApp = 'generates a React app';
+  const testGeneratesANodeApp = 'generates a Node app';
 
-  it(`${testGeneratesAReactApp}`, (done) => {
+  it(`${testGeneratesANodeApp}`, (done) => {
     const appPath = getNewAppPath();
     console.log(
-      `test '${testGeneratesAReactApp}' is scaffolding to ${appPath}`
+      `test '${testGeneratesANodeApp}' is scaffolding to ${appPath}`
     );
-    scaffolder.scaffold(appPath, scaffolder.scaffoldReactCommand, (err) => {
+    scaffolder.scaffold(appPath, scaffolder.scaffoldNodeCommand, (err) => {
       try {
         if (err) {
           console.log(err);

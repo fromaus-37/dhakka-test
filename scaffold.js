@@ -14,7 +14,7 @@ whereas promisify(fs.readFile) was 20% or so slower.
 Since the reason why I switched to Vite was because Create-React-App
 was excruciatingly slow, and since scaffolding an app means
 lots of reading and writing of files, I don't want to build in
-a Promise-based pattern here that I can reasonably suppose could be
+a Promise-based pattern here that I can reasonably suppose would be
 a lot slower.
 */
 
@@ -68,7 +68,7 @@ function getMerge(continuation, mergeCount) {
   };
 }
 
-function scaffoldReactCommand(appPath, callback) {
+function scaffoldNodeCommand(appPath, callback) {
   const scaffoldCommands = [
     `cd ${appPath}`,
     `npm init -y`,
@@ -107,7 +107,7 @@ function scaffoldReactCommand(appPath, callback) {
             };
             fs.writeFile(
               packageJsonPath,
-              JSON.stringify(packageObject),
+              JSON.stringify(packageObject, null, 2),
               (err) => {
                 if (err) {
                   merge_initnpm_copyfiles_modgitignore(err);
@@ -215,5 +215,5 @@ function scaffoldReactCommand(appPath, callback) {
 
 module.exports = {
   scaffold,
-  scaffoldReactCommand,
+  scaffoldNodeCommand,
 };

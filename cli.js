@@ -3,7 +3,7 @@
 //const fs = require('fs');
 const { program, Option } = require('commander');
 const pkg = require('./package.json');
-const { scaffoldNode, scaffoldReact } = require('./scaffold.js');
+const { scaffold, scaffoldNodeCommand } = require('./scaffold.js');
 
 program.version(pkg.version).description(pkg.description);
 
@@ -23,9 +23,14 @@ program
   )
   .action((path, options /*, command*/) => {
     if (options.node) {
-      scaffoldNode(path);
+      scaffold(path, scaffoldNodeCommand, (err) => {
+        console.log("An error occured while generating the app:")
+        console.log("");
+        console.log("----" + err);
+      });
     } else {
-      scaffoldReact(path);
+      //scaffoldReact(path);
+      console.log("Option not supported at the moment.");
     }
   });
 
