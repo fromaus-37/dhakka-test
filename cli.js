@@ -24,16 +24,13 @@ program
   .action((path, options /*, command*/) => {
     if (options.node) {
       scaffold(path, scaffoldNodeCommand, (err) => {
-        if (err)
-        {
-
+        if (err) {
           console.log('An error occured while generating the app:');
           console.log('----' + err);
         } else {
           console.log('');
           console.log('App generated successfully!');
         }
-
       });
     } else {
       //scaffoldReact(path);
