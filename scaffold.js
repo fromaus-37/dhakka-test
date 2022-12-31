@@ -153,34 +153,41 @@ function scaffoldNodeCommand(appPath, callback) {
 
   const filesToCopy = [
     {
-      source: './scaffoldFiles/node/.eslintrc.js',
+      source: '/scaffoldFiles/node/.eslintrc.js',
       dest: path.join(appPath, '.eslintrc.js'),
     },
     {
-      source: './scaffoldFiles/node/.prettierrc.json',
+      source: '/scaffoldFiles/node/.prettierrc.json',
       dest: path.join(appPath, '.prettierrc.json'),
     },
     {
-      source: './scaffoldFiles/node/.prettierignore',
+      source: '/scaffoldFiles/node/.prettierignore',
       dest: path.join(appPath, '.prettierignore'),
     },
     {
-      source: './scaffoldFiles/node/jest.config.js',
+      source: '/scaffoldFiles/node/jest.config.js',
       dest: path.join(appPath, 'jest.config.js'),
     },
     {
-      source: './scaffoldFiles/node/tests/.eslintrc.js',
+      source: '/scaffoldFiles/node/tests/.eslintrc.js',
       dest: path.join(appPath, 'tests/.eslintrc.js'),
     },
     {
-      source: './scaffoldFiles/node/tests/unitTests/jestSetup.js',
+      source: '/scaffoldFiles/node/tests/unitTests/jestSetup.js',
       dest: path.join(appPath, 'tests/unitTests/jestSetup.js'),
     },
     {
-      source: './scaffoldFiles/node/tests/integrationTests/jestSetup.js',
+      source: '/scaffoldFiles/node/tests/integrationTests/jestSetup.js',
       dest: path.join(appPath, 'tests/integrationTests/jestSetup.js'),
     },
-  ];
+  ].map( obj =>
+      (
+        {
+          source: __dirname + obj.source,
+          dest: obj.dest
+        }
+      )
+      );
 
   const merge_copyfiles = getMerge(
     merge_initnpm_copyfiles_modgitignore,
