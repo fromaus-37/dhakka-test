@@ -73,7 +73,7 @@ describe('scaffold', () => {
         expect(packageJsonPath).toBeFileWithContent();
 
         const packageObject = require(packageJsonPath);
-        expect(packageObject.scripts.test).toBe('jest');
+        expect(packageObject.scripts.test).toBe('jest --coverage');
         expect(packageObject.scripts.format).toContain('prettier');
         expect(packageObject.scripts.lint).toContain('eslint .');
         expect(packageObject.scripts['lint:js']).toBe('eslint .');
@@ -90,7 +90,7 @@ describe('scaffold', () => {
           'eslint-plugin-jest'
         );
         expect(path.join(appPath, 'tests/.eslintrc.js')).toBeFileWithContent();
-        expect(packageObject.scripts['test']).toBe('jest');
+        expect(packageObject.scripts['test']).toBe('jest --coverage');
         expect(path.join(appPath, 'jest.config.js')).toBeFileWithContent();
         expect(
           path.join(appPath, 'tests/integrationTests/jestSetup.js')

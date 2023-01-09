@@ -4,7 +4,7 @@
   "description": "Dhakka ('push start' in Urdu/Hindi) is a command line utility for creating a React application with a webpack-based setup that is minimal, transparent and customisable",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "lint:js": "eslint .",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",

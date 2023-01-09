@@ -29,7 +29,7 @@ module.exports = async () => {
         ...baseProjectConfig,
         displayName: 'IntegrationTests',
         testMatch: [path.join(integrationTestFolder, '**/*.test.js')],
-        slowTestThreshold: 60000, //1 minute
+        slowTestThreshold: 180000, //1 minute
         setupFilesAfterEnv: getSetupFiles(integrationTestFolder),
       },
     ],
