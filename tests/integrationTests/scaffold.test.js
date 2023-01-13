@@ -73,7 +73,7 @@ describe('scaffold', () => {
         expect(packageJsonPath).toBeFileWithContent();
 
         const packageObject = require(packageJsonPath);
-        expect(packageObject.scripts.test).toBe('jest --coverage');
+        expect(packageObject.scripts.test).toBe('jest');
         expect(packageObject.scripts.format).toContain('prettier');
         expect(packageObject.scripts.lint).toContain('eslint .');
         expect(packageObject.scripts['lint:js']).toBe('eslint .');
