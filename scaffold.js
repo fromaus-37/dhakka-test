@@ -99,7 +99,7 @@ function scaffoldNodeCommand(appPath, callback) {
           try {
             const packageObject = JSON.parse(data);
             packageObject.scripts = {
-              test: 'jest --coverage', //no detailed coverage report is --coverage flag excluded
+              test: 'jest',
               'lint:js': 'eslint .',
               lint: 'eslint . && prettier --check .',
               format: 'prettier --write .',

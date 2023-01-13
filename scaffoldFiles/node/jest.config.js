@@ -15,6 +15,7 @@ module.exports = async () => {
     //of the project object (all such properties
     //are declared in type ProjectConfig in
     //Config.ts in Jest repo)
+    collectCoverage: true,
   };
 
   let config = {
