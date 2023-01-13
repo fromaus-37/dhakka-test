@@ -1,7 +1,7 @@
-const scaffolder = require('../../scaffold.js');
 const fs = require('fs');
 const path = require('path');
 const tempfolder = require('../utils/tempfolder');
+const { exec } = require('child_process');
 
 describe('scaffold', () => {
   const getNewAppPath = tempfolder.initializeTempFolder('scaffoldUnitTests');
@@ -59,7 +59,7 @@ describe('scaffold', () => {
   it(`${testGeneratesANodeApp}`, (done) => {
     const appPath = getNewAppPath();
     console.log(`test '${testGeneratesANodeApp}' is scaffolding to ${appPath}`);
-    scaffolder.scaffold(appPath, scaffolder.scaffoldNodeCommand, (err) => {
+    exec(`dhakka -n ${appPath}`, (err/*, stdout, stderr*/) => {
       try {
         if (err) {
           console.log(err);
