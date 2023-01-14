@@ -73,7 +73,9 @@ describe(`${fixtureName}`, () => {
     //of contention on this folder when running tests and Jest watcher
     //would keep crashing
     exec(
-      `npx nyc --reporter=lcov --report-dir ./cli-coverage --temp-dir ${nycFolder.createSubFolderForTest(testGeneratesANodeApp)} dhakka -n ${appPath}`,
+      `npx nyc --reporter=lcov --report-dir ./cli-coverage --temp-dir ${nycFolder.createSubFolderForTest(
+        testGeneratesANodeApp
+      )} dhakka -n ${appPath}`,
       (err /*, stdout, stderr*/) => {
         try {
           if (err) {
