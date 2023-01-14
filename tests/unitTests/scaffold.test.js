@@ -12,7 +12,7 @@ describe('scaffold', () => {
     });
 
   it('creates the path if not there and generates scaffold', (done) => {
-    const pathToApp = getNewAppPath();
+    const pathToApp = getNewAppPath().path;
     const scaffoldCommand = getScaffoldCommandStub();
 
     scaffolder.scaffold(pathToApp, scaffoldCommand, () => {
@@ -26,7 +26,7 @@ describe('scaffold', () => {
   });
 
   it('does not scaffold in a non-empty directory', (done) => {
-    const pathToApp = getNewAppPath();
+    const pathToApp = getNewAppPath().path;
 
     const scaffoldCommand = getScaffoldCommandStub();
     fs.mkdir(pathToApp, { recursive: true }, (err) => {

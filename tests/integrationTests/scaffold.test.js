@@ -57,9 +57,16 @@ describe('scaffold', () => {
   const testGeneratesANodeApp = 'generates a Node app';
 
   it(`${testGeneratesANodeApp}`, (done) => {
-    const appPath = getNewAppPath();
+    const appPathInfo = getNewAppPath();
+    const appPath = appPathInfo.path;
     console.log(`test '${testGeneratesANodeApp}' is scaffolding to ${appPath}`);
-    exec(`dhakka -n ${appPath}`, (err/*, stdout, stderr*/) => {
+    //specifying --temp-dir as a UUID within the default ./.nyc_output
+    //(same folder name as the folderName into which the app would
+    //be scaffolded although that would be in a different base folder whereas
+    //this one is located in ./.nyc_output) because there was some kind
+    //of contention on this folder when running tests and Jest watcher
+    //would keep crashing
+    exec(`npx nyc --reporter=lcov --report-dir ./cli-coverage --temp-dir ./.nyc_output/${appPathInfo.folder} dhakka -n ${appPath}`, (err /*, stdout, stderr*/) => {
       try {
         if (err) {
           console.log(err);
