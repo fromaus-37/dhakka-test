@@ -2,7 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const tempfolder = require('../utils/tempfolder');
 const { exec } = require('child_process');
-const { initializeCoverageFoldersForFixture } = require('../utils/coverageFolders');
+const {
+  initializeCoverageFoldersForFixture,
+} = require('../utils/coverageFolders');
 
 const fixtureName = 'scaffold';
 describe(`${fixtureName}`, () => {
@@ -10,7 +12,11 @@ describe(`${fixtureName}`, () => {
 
   //TODO: DELETE and recreate .nyc_output folder for the fixture here so that
   //output from all coverage files in it can be merged later
-  const coverageFolders = initializeCoverageFoldersForFixture('./.nyc_output', './cli-coverage', fixtureName);
+  const coverageFolders = initializeCoverageFoldersForFixture(
+    './.nyc_output',
+    './cli-coverage',
+    fixtureName
+  );
 
   expect.extend({
     toBeFileWithContent: (receivedFilePath, minFileSize = 1) => {
@@ -72,7 +78,9 @@ describe(`${fixtureName}`, () => {
     //this one is located in ./.nyc_output) because there was some kind
     //of contention on this folder when running tests and Jest watcher
     //would keep crashing
-    const coverageFoldersForTest = coverageFolders.createSubFoldersForTest(testGeneratesANodeApp);
+    const coverageFoldersForTest = coverageFolders.createSubFoldersForTest(
+      testGeneratesANodeApp
+    );
     exec(
       `npx nyc --reporter=lcov --report-dir ${coverageFoldersForTest.coverageFolderForTest} --temp-dir ${coverageFoldersForTest.nycFolderforTest} dhakka -n ${appPath}`,
       (err /*, stdout, stderr*/) => {
