@@ -4,8 +4,9 @@ const path = require('path');
 module.exports = async () => {
   const isDebuggerAttached = await debuggerIsAttached();
 
-  const unitTestFolder = '<rootDir>/tests/unitTests';
-  const integrationTestFolder = '<rootDir>/tests/integrationTests';
+  const testsFolder = '<rootDir>/tests';
+  const unitTestFolder = testsFolder + '/unitTests';
+  const integrationTestFolder = testsFolder + '/integrationTests';
   const getSetupFiles = (folder) =>
     isDebuggerAttached ? [] : [path.join(folder, 'jestSetup.js')];
 
@@ -14,10 +15,12 @@ module.exports = async () => {
     //be properties of ProjectConfig type in
     //Config.ts in Jest repo) that are the same for
     //all projects
-    collectCoverage: true,
   };
 
   let config = {
+    collectCoverage: true,
+    coverageReporters: ['json'],
+    globalTeardown: path.join(testsFolder, 'globalTeardown.js'),
     projects: [
       {
         ...baseProjectConfig,
@@ -32,6 +35,8 @@ module.exports = async () => {
         testMatch: [path.join(integrationTestFolder, '**/*.test.js')],
         slowTestThreshold: 180000, //1 minute
         setupFilesAfterEnv: getSetupFiles(integrationTestFolder),
+        globalSetup: path.join(integrationTestFolder, 'globalSetup.js'),
+        globalTeardown: path.join(integrationTestFolder, 'globalTeardown.js'),
       },
     ],
     //any other Jest config (properties that are in type

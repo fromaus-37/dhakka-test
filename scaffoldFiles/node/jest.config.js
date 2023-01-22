@@ -15,10 +15,13 @@ module.exports = async () => {
     //of the project object (all such properties
     //are declared in type ProjectConfig in
     //Config.ts in Jest repo)
-    collectCoverage: true,
   };
 
   let config = {
+    //any config key/values in configuration (except those
+    //that are to specified in ProjectConfig)
+
+    //project config
     projects: [
       {
         ...baseProjectConfig,
