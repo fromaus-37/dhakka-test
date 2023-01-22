@@ -1,0 +1,37 @@
+const fs = require('fs');
+const path = require('path');
+const process = require('process');
+const testConsts = require('../testConsts');
+
+async function deleteCoverageDirs(globalConfig /*, projectConfig*/) {
+  if (!globalConfig.collectCoverage) return Promise.resolve();
+
+  const coverageDirs = [testConsts.nycOutputDir].map((folder) =>
+    path.join(process.cwd(), folder)
+  );
+
+  //TODO: OTHER VARIATIONS I WANT TO TRY:
+  //1. linearise the nesting by using multiple chained Promises
+  //2. Use promisify
+  //3. use async fs module built into Node
+  const promisesOfDirDeletion = coverageDirs.map(
+    (dir) =>
+      new Promise((resolve, reject) => {
+        fs.access(dir, fs.constants.F_OK, (err) => {
+          if (err) {
+            //dir not found, we're done
+            resolve();
+          } else {
+            fs.rmdir(dir, { recursive: true, force: true }, (err) => {
+              if (err) reject();
+              else resolve();
+            });
+          }
+        });
+      })
+  );
+
+  return Promise.all(promisesOfDirDeletion);
+}
+
+module.exports = deleteCoverageDirs;

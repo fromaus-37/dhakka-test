@@ -2,21 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const tempfolder = require('../utils/tempfolder');
 const { exec } = require('child_process');
-const {
-  initializeCoverageFoldersForFixture,
-} = require('../utils/coverageFolders');
+const testConsts = require('../testConsts');
 
 const fixtureName = 'scaffold';
 describe(`${fixtureName}`, () => {
   const getNewAppPath = tempfolder.initializeTempFolder('scaffoldUnitTests');
-
-  //TODO: DELETE and recreate .nyc_output folder for the fixture here so that
-  //output from all coverage files in it can be merged later
-  const coverageFolders = initializeCoverageFoldersForFixture(
-    './.nyc_output',
-    './cli-coverage',
-    fixtureName
-  );
 
   expect.extend({
     toBeFileWithContent: (receivedFilePath, minFileSize = 1) => {
@@ -72,17 +62,9 @@ describe(`${fixtureName}`, () => {
     const appPathInfo = getNewAppPath();
     const appPath = appPathInfo.path;
     console.log(`test '${testGeneratesANodeApp}' is scaffolding to ${appPath}`);
-    //specifying --temp-dir as a UUID within the default ./.nyc_output
-    //(same folder name as the folderName into which the app would
-    //be scaffolded although that would be in a different base folder whereas
-    //this one is located in ./.nyc_output) because there was some kind
-    //of contention on this folder when running tests and Jest watcher
-    //would keep crashing
-    const coverageFoldersForTest = coverageFolders.createSubFoldersForTest(
-      testGeneratesANodeApp
-    );
+
     exec(
-      `npx nyc --reporter=lcov --report-dir ${coverageFoldersForTest.coverageFolderForTest} --temp-dir ${coverageFoldersForTest.nycFolderforTest} dhakka -n ${appPath}`,
+      `nyc -t ${testConsts.nycOutputDir} --no-clean dhakka -n ${appPath}`,
       (err /*, stdout, stderr*/) => {
         try {
           if (err) {
