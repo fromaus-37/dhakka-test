@@ -11,6 +11,7 @@ async function deleteCoverageDirs(globalConfig /*, projectConfig*/) {
   );
 
   //TODO: OTHER VARIATIONS I WANT TO TRY:
+  //based on this article: https://blog.logrocket.com/guide-promises-node-js/#:~:text=Promises%20are%20generally%20created%20by,after%20a%20promise%20is%20created.
   //1. linearise the nesting by using multiple chained Promises
   //2. Use promisify
   //3. use async fs module built into Node
