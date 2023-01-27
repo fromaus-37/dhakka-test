@@ -12,31 +12,31 @@ pool:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: "18.x"
-    displayName: "Install Node.js"
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
 
   - script: |
       npm install .
       npm run lint # this is how we build, at least for now
-    displayName: "npm install and build"
+    displayName: 'npm install and build'
 
   - script: |
       npm run test-ci:unit
 
   - task: PublishTestResults@2
-    displayName: "publish unit test results"
+    displayName: 'publish unit test results'
     condition: succeededOrFailed() # because otherwise we won't know what tests failed
     inputs:
-      testResultsFiles: "coverage/junit.xml"
-      testRunTitle: "Unit tests"
+      testResultsFiles: 'coverage/junit.xml'
+      testRunTitle: 'Unit tests'
 
   - script: |
       npm link
       npm run test-ci:integration
 
   - task: PublishTestResults@2
-    displayName: "publish integration test results"
+    displayName: 'publish integration test results'
     condition: succeededOrFailed() # because otherwise we won't know what tests failed
     inputs:
-      testResultsFiles: "coverage/junit.xml"
-      testRunTitle: "Integration tests"
+      testResultsFiles: 'coverage/junit.xml'
+      testRunTitle: 'Integration tests'
