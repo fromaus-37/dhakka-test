@@ -8,6 +8,7 @@
     "test-ci:unit": "jest tests/unitTests/* --coverage --ci --reporters=\"jest-junit\"",
     "test-ci:integration": "jest tests/integrationTests/* --coverage --ci --reporters=\"jest-junit\"",
     "test-ci": "jest --coverage --ci --reporters=\"jest-junit\"",
+    "report-coverage-ci": "nyc report -t coverage --report-dir coverage --reporter=cobertura",
     "lint:js": "eslint .",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
