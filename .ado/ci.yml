@@ -7,7 +7,7 @@ trigger:
   - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ubuntu-22.04
 
 steps:
   - task: NodeTool@0
@@ -21,7 +21,7 @@ steps:
     displayName: "npm install and build"
 
   - script: |
-      npm run test-ci:unit
+      npm run test
 
   - task: PublishTestResults@2
     displayName: "supply npm test results to pipelines"
