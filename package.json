@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
+    "test-ci:unit": "jest tests/unitTests/* --coverage --ci",
     "lint:js": "eslint .",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
