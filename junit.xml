@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="2" failures="0" errors="0" time="1.654">
+  <testsuite name="scaffold" errors="0" failures="0" skipped="0" timestamp="2023-01-27T05:02:12" time="1.436" tests="2">
+    <testcase classname="scaffold creates the path if not there and generates scaffold" name="scaffold creates the path if not there and generates scaffold" time="0.03">
+    </testcase>
+    <testcase classname="scaffold does not scaffold in a non-empty directory" name="scaffold does not scaffold in a non-empty directory" time="0.014">
+    </testcase>
+  </testsuite>
+</testsuites>

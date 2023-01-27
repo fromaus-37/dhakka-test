@@ -22,3 +22,9 @@ steps:
 
   - script: |
       npm run test-ci:unit
+
+  - task: PublishTestResults@2
+    displayName: "supply npm test results to pipelines"
+    condition: succeededOrFailed() # because otherwise we won't know what tests failed
+    inputs:
+      testResultsFiles: "coverage/junit.xml"
