@@ -83,8 +83,7 @@ function scaffoldNodeCommand(appPath, callback) {
     `cd ${appPath}`,
     `git init`,
     `npm run prepare`,
-    `npx husky add .husky/pre-commit "npm run format"`,
-    `npx husky add .husky/pre-commit "npm run lint:js"`,
+    `npx husky add .husky/pre-commit "npm run lint"`,
   ];
 
   const merge_initnpm_copyfiles_modgitignore = getMerge(callback, 3);

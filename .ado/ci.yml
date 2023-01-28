@@ -49,3 +49,10 @@ steps:
     inputs:
       codeCoverageTool: 'Cobertura'
       summaryFileLocation: coverage/cobertura-coverage.xml
+  # version the pipeline
+
+  - task: Npm@1
+    inputs:
+      command: publish
+      publishRegistry: useFeed
+      publishFeed: Dhakka/UAT
