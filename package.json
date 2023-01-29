@@ -12,7 +12,8 @@
     "lint:js": "eslint .",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "commit": "git-cz"
   },
   "keywords": [],
   "author": "",
@@ -23,8 +24,10 @@
   "devDependencies": {
     "@commitlint/cli": "17.4.2",
     "@commitlint/config-conventional": "17.4.2",
+    "@commitlint/prompt": "17.4.2",
     "@semantic-release/changelog": "6.0.2",
     "@semantic-release/exec": "6.0.3",
+    "commitizen": "4.3.0",
     "debugger-is-attached": "1.2.0",
     "eslint": "8.24.0",
     "eslint-config-prettier": "8.5.0",
@@ -44,5 +47,10 @@
     "suiteNameTemplate": "{filepath}",
     "outputDirectory": "coverage/.",
     "outputName": "junit.xml"
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/prompt"
+    }
   }
 }
