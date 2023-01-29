@@ -50,6 +50,13 @@ steps:
       codeCoverageTool: 'Cobertura'
       summaryFileLocation: coverage/cobertura-coverage.xml
 
+  - task: BuildQualityChecks@7
+    displayName: 'Check build quality (including coeverage)'
+    inputs:
+      checkCoverage: true
+      coverageFailOption: fixed
+      coverageType: lines
+      coverageThreshold: 90
   # version the pipeline
 
   # - task: Npm@1
