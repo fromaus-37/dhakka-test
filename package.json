@@ -7,13 +7,11 @@
     "test": "jest --coverage",
     "test-ci:unit": "jest tests/unitTests/* --coverage --ci --reporters=\"jest-junit\" && mv coverage/coverage-final.json  coverage/coverage-final-unit.json",
     "test-ci:integration": "jest tests/integrationTests/* --coverage --ci --reporters=\"jest-junit\" && mv coverage/coverage-final.json  coverage/coverage-final-integration.json",
-    "test-ci": "jest --coverage --ci --reporters=\"jest-junit\"",
     "report-coverage-ci": "nyc report -t coverage --report-dir coverage --reporter=cobertura",
     "lint:js": "eslint .",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "prepare": "husky install",
-    "commit": "git-cz"
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -47,10 +45,5 @@
     "suiteNameTemplate": "{filepath}",
     "outputDirectory": "coverage/.",
     "outputName": "junit.xml"
-  },
-  "config": {
-    "commitizen": {
-      "path": "@commitlint/prompt"
-    }
   }
 }

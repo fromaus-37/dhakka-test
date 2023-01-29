@@ -114,8 +114,7 @@ describe(`${fixtureName}`, () => {
           expect(packageObject.devDependencies).toHaveProperty('husky');
           expect(packageObject.scripts.prepare).toBe('husky install');
           expect(path.join(appPath, '.husky/pre-commit')).toHaveLines([
-            'npm run format',
-            'npm run lint:js',
+            'npm run lint',
           ]);
 
           done();
