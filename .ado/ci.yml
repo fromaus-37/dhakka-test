@@ -59,7 +59,7 @@ steps:
       coverageThreshold: 80
 
   - script: |
-      cat $(Build.SourcesDirectory)/dhakka
+      cat $(Build.SourcesDirectory)/README.md
     displayName: testing what is in the $(Build.SourcesDirectory)
 
   # version the pipeline
