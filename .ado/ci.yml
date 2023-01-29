@@ -58,7 +58,7 @@ steps:
       coverageType: lines
       coverageThreshold: 80
 
-  - scipt: |
+  - script: |
       cat $(Build.SourcesDirectory)/dhakka
     displayName: testing what is in the $(Build.SourcesDirectory)
 
