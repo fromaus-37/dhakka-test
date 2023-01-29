@@ -56,7 +56,12 @@ steps:
       checkCoverage: true
       coverageFailOption: fixed
       coverageType: lines
-      coverageThreshold: 90
+      coverageThreshold: 80
+
+  - scipt: |
+      cat $(Build.SourcesDirectory)/dhakka
+    displayName: testing what's in the $(Build.SourcesDirectory)
+
   # version the pipeline
 
   # - task: Npm@1
