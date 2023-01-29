@@ -60,7 +60,7 @@ steps:
 
   - scipt: |
       cat $(Build.SourcesDirectory)/dhakka
-    displayName: testing what's in the $(Build.SourcesDirectory)
+    displayName: testing what is in the $(Build.SourcesDirectory)
 
   # version the pipeline
 
