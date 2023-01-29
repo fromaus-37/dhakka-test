@@ -50,7 +50,7 @@ steps:
       codeCoverageTool: 'Cobertura'
       summaryFileLocation: coverage/cobertura-coverage.xml
 
-  - task: BuildQualityChecks@7
+  - task: BuildQualityChecks@8
     displayName: 'Check build quality (including coeverage)'
     inputs:
       checkCoverage: true
