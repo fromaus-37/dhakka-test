@@ -62,10 +62,13 @@ steps:
       cat $(Build.SourcesDirectory)/README.md
     displayName: testing what is in the $(Build.SourcesDirectory)
 
-  # version the pipeline
+  # version the pipeline property, as: <current version>-then-pr<pr number>
+  #
+  # publish release notes also, as they are a UAT/post-UAT artifact, so just before the final
+  #     deployment's version number is produced
 
-  # - task: Npm@1
-  #   inputs:
-  #     command: publish
-  #     publishRegistry: useFeed
-  #     publishFeed: Dhakka/UAT
+  - task: Npm@1
+    inputs:
+      command: publish
+      publishRegistry: useFeed
+      publishFeed: Dhakka/UAT
