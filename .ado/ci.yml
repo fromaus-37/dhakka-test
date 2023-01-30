@@ -89,4 +89,4 @@ steps:
   - task: pr-auto-comment@1
     inputs:
       comments: |
-        Package version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)/$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by [CI build #$(Build.BuildNumber)]($(System.CollectionUri)/$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results).
+        Package version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by [CI build #$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results).
