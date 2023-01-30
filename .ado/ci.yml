@@ -72,6 +72,11 @@ steps:
       echo Version of package deployed to UAT npm registry: $newver
       # finally, set the new ver number on our package
       npm pkg set version=$newver
+      # output version number of package for use by a subsequent task
+      # using magic notation to do that using echo
+      echo "##vso[task.setvariable variable=UAT_PACKAGE_VER]$newver"
+    displayName: 'Set version number of package for deployment to UAT Artifacts feed'
+
   # publish release notes also, as they are a UAT/post-UAT artifact, so just before the final
   #     deployment's version number is produced
 
@@ -80,3 +85,9 @@ steps:
       command: publish
       publishRegistry: useFeed
       publishFeed: Dhakka/UAT
+
+  - task: pr-auto-comment@1
+    inputs:
+      comments: |
+        Has this been tested in the dev environment?
+        Does the documentation need to be updated due to this change?
