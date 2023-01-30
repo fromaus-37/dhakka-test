@@ -93,7 +93,7 @@ steps:
             {
               "parentCommentId": 0,
               "content": "Your comment here",
-              "commentType": 2
+              "commentType": 3
             }
           ],
           "status": 4
