@@ -95,7 +95,7 @@ steps:
           "comments": [
             {
               "parentCommentId": 0,
-              "content": "# Deployed to UAT\n\nPackage version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by CI build [#$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results)\n\n**If you have already connected to the UAT feed then:** \`npm install dhakka@$(UAT_PACKAGE_VER)\`",
+              "content": "# Deployed to UAT\n\n\nPackage version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by CI build [#$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results)\n\n**If you have already connected to the UAT feed then:** \`npm install dhakka@$(UAT_PACKAGE_VER)\`",
               "commentType": 1
             }
           ],
