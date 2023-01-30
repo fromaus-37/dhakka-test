@@ -68,7 +68,7 @@ steps:
       # take everything before first hyphen (will be a no-op if no hyphen found)
       newver=${newver%%-*}
       # now append pr number after hyphen to version number we just extracted
-      newver=$newver-pr$(System.PullRequest.PullRequestNumber)
+      newver=$newver-pr$(System.PullRequest.PullRequestId)
       echo $newver
       # finally, set the new ver number on our package
       npm pkg set version=$newver
