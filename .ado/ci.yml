@@ -68,10 +68,8 @@ steps:
       # take everything before first hyphen (will be a no-op if no hyphen found)
       newver=${newver%%-*}
       # now append pr number after hyphen to version number we just extracted
-      newver=$newver-pr$(System.PullRequest.PullRequestId)-$(Build.BuildId)
-      echo Build Id: $(Build.BuildId)
-      echo BuildNumber: $(Build.BuildNumber)
-      echo $newver
+      newver=$newver-pr$(System.PullRequest.PullRequestId)-$(Build.BuildNumber)
+      echo Version of package deployed to UAT npm registry: $newver
       # finally, set the new ver number on our package
       npm pkg set version=$newver
   # publish release notes also, as they are a UAT/post-UAT artifact, so just before the final
