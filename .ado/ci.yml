@@ -93,7 +93,7 @@ steps:
             {
               "parentCommentId": 0,
               "content": "Your comment here",
-              "commentType": "codeChange"
+              "commentType": "system"
             }
           ],
           "status": 4
