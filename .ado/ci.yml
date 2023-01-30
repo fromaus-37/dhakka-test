@@ -86,7 +86,19 @@ steps:
       publishRegistry: useFeed
       publishFeed: Dhakka/UAT
 
-  - task: pr-auto-comment@1
-    inputs:
-      comments: |
-        Package version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by CI build [#$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results).
+  - powershell: |
+      $body = @"
+      {
+          "comments": [
+            {
+              "parentCommentId": 0,
+              "content": "Your comment here",
+              "commentType": 0
+            }
+          ],
+          "status": 4
+        }
+      "@
+      $url = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$env:SYSTEM_TEAMPROJECTID/_apis/git/repositories/$($env:Build_Repository_Name)/pullRequests/$($env:System_PullRequest_PullRequestId)/threads?api-version=5.1"
+      $result = Invoke-RestMethod -Uri $url -Method POST -Headers @{Authorization = "Bearer $(System.AccessToken)"} -Body $Body -ContentType application/json
+    displayName: Post comment on PR
