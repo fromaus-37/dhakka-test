@@ -58,12 +58,20 @@ steps:
       coverageType: lines
       coverageThreshold: 80
 
+  # version the pipeline property, as: <current major.minor.patch>-then-pr<pr number>
   - script: |
-      cat $(Build.SourcesDirectory)/README.md
-    displayName: testing what is in the $(Build.SourcesDirectory)
-
-  # version the pipeline property, as: <current version>-then-pr<pr number>
-  #
+      newver=$(npm pkg get version)
+      # take everything after first double quote
+      newver=${newver#*\"}
+      # take everything before last double quote
+      newver=${newver%\"*}
+      # take everything before first hyphen (will be a no-op if no hyphen found)
+      newver=${newver%%-*}
+      # now append pr number after hyphen to version number we just extracted
+      newver=$newver-pr$(System.PullRequest.PullRequestNumber)
+      echo $newver
+      # finally, set the new ver number on our package
+      npm pkg set version=$newver
   # publish release notes also, as they are a UAT/post-UAT artifact, so just before the final
   #     deployment's version number is produced
 
