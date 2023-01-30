@@ -96,7 +96,7 @@ steps:
               "commentType": 1
             }
           ],
-          "status": 5
+          "status": 3
         }
       "@
       $url = "$(System.CollectionUri)$(System.TeamProject)/_apis/git/repositories/Dhakka/pullRequests/$(System.PullRequest.PullRequestId)/threads?api-version=5.1"
