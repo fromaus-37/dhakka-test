@@ -86,17 +86,20 @@ steps:
       publishRegistry: useFeed
       publishFeed: Dhakka/UAT
 
+  #In task below:
+  #commentType has no effect (all comments are of type text)
+  #status of 4 means Closed (3 is Won't Fix and 5 is Unknown, I didn' try the rest)
   - powershell: |
       $body = @"
       {
           "comments": [
             {
               "parentCommentId": 0,
-              "content": "Your comment here",
+              "content": "# Deployed to UAT\nPackage version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by CI build [#$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results)",
               "commentType": 1
             }
           ],
-          "status": 3
+          "status": 4
         }
       "@
       $url = "$(System.CollectionUri)$(System.TeamProject)/_apis/git/repositories/Dhakka/pullRequests/$(System.PullRequest.PullRequestId)/threads?api-version=5.1"
