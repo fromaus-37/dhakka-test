@@ -95,7 +95,7 @@ steps:
           "comments": [
             {
               "parentCommentId": 0,
-              "content": "# Deployed to UAT\nPackage version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by CI build [#$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results)",
+              "content": "# Deployed to UAT\n\nPackage version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by CI build [#$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results)",
               "commentType": 1
             }
           ],
