@@ -3,6 +3,11 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
+# Trigger is none and the only way to trigger it is
+# via pr trigger declared in Azure DevOps UI (as this
+# is the only way of registering a pr trigger
+# if the repo is Azure Repos; if the repo were GitHub
+# we would have declared a pr trigger in this file)
 trigger: none
 
 pool:
@@ -10,6 +15,7 @@ pool:
 
 steps:
   - template: build-and-test.yml
+
   # version the pipeline property, as: <current major.minor.patch>-then-pr<pr number>
   - script: |
       newver=$(npm pkg get version)
