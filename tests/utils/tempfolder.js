@@ -13,7 +13,11 @@ const initializeTempFolder = (tempFolderName) => {
   }
 
   const getNewAppPath = () => {
-    return path.join(tempFolderPath, `F${uuid.v1()}`);
+    const folderName = `F${uuid.v1()}`;
+    return {
+      folder: folderName,
+      path: path.join(tempFolderPath, `${folderName}`),
+    };
   };
 
   return getNewAppPath;

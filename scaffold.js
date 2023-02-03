@@ -72,7 +72,7 @@ function scaffoldNodeCommand(appPath, callback) {
   const scaffoldCommands = [
     `cd ${appPath}`,
     `npm init -y`,
-    `npm install --save-dev --save-exact eslint eslint-config-prettier prettier jest eslint-plugin-jest debugger-is-attached husky`,
+    `npm install --save-dev --save-exact eslint eslint-config-prettier prettier pretty-quick jest eslint-plugin-jest debugger-is-attached husky`,
     `npx gitignore Node`,
   ];
 
@@ -83,8 +83,7 @@ function scaffoldNodeCommand(appPath, callback) {
     `cd ${appPath}`,
     `git init`,
     `npm run prepare`,
-    `npx husky add .husky/pre-commit "npm run format"`,
-    `npx husky add .husky/pre-commit "npm run lint:js"`,
+    `npx husky add .husky/pre-commit "npm run lint:js && npm run format-staged"`,
   ];
 
   const merge_initnpm_copyfiles_modgitignore = getMerge(callback, 3);
@@ -99,10 +98,11 @@ function scaffoldNodeCommand(appPath, callback) {
           try {
             const packageObject = JSON.parse(data);
             packageObject.scripts = {
-              test: 'jest --coverage', //no detailed coverage report is --coverage flag excluded
+              test: 'jest',
               'lint:js': 'eslint .',
               lint: 'eslint . && prettier --check .',
               format: 'prettier --write .',
+              'format-staged': 'pretty-quick --staged',
               prepare: 'husky install',
             };
             fs.writeFile(

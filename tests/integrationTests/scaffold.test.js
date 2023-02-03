@@ -1,9 +1,11 @@
-const scaffolder = require('../../scaffold.js');
 const fs = require('fs');
 const path = require('path');
 const tempfolder = require('../utils/tempfolder');
+const { exec } = require('child_process');
+const testConsts = require('../testConsts');
 
-describe('scaffold', () => {
+const fixtureName = 'scaffold';
+describe(`${fixtureName}`, () => {
   const getNewAppPath = tempfolder.initializeTempFolder('scaffoldUnitTests');
 
   expect.extend({
@@ -54,66 +56,72 @@ describe('scaffold', () => {
     },
   });
 
-  const testGeneratesANodeApp = 'generates a Node app';
+  const testGeneratesANodeApp = 'generatesANodeApp';
 
   it(`${testGeneratesANodeApp}`, (done) => {
-    const appPath = getNewAppPath();
+    const appPathInfo = getNewAppPath();
+    const appPath = appPathInfo.path;
     console.log(`test '${testGeneratesANodeApp}' is scaffolding to ${appPath}`);
-    scaffolder.scaffold(appPath, scaffolder.scaffoldNodeCommand, (err) => {
-      try {
-        if (err) {
-          console.log(err);
-          done(err);
-          return;
+
+    exec(
+      `nyc -t ${testConsts.nycOutputDir} --no-clean dhakka -n ${appPath}`,
+      (err /*, stdout, stderr*/) => {
+        try {
+          if (err) {
+            console.log(err);
+            done(err);
+            return;
+          }
+
+          expect(fs.existsSync(appPath)).toBe(true);
+
+          const packageJsonPath = path.join(appPath, 'package.json');
+          expect(packageJsonPath).toBeFileWithContent();
+
+          const packageObject = require(packageJsonPath);
+          expect(packageObject.scripts.test).toBe('jest');
+          expect(packageObject.scripts.format).toContain('prettier');
+          expect(packageObject.scripts.lint).toContain('eslint .');
+          expect(packageObject.scripts['lint:js']).toBe('eslint .');
+
+          expect(path.join(appPath, '.gitignore')).toHaveLines(['.vscode']);
+
+          expect(path.join(appPath, '.eslintrc.js')).toBeFileWithContent();
+          expect(path.join(appPath, '.prettierrc.json')).toBeFileWithContent();
+          expect(path.join(appPath, '.prettierignore')).toBeFileWithContent();
+
+          //expect Jest correctly installed and configured
+          expect(packageObject.devDependencies).toHaveProperty('jest');
+          expect(packageObject.devDependencies).toHaveProperty(
+            'eslint-plugin-jest'
+          );
+          expect(
+            path.join(appPath, 'tests/.eslintrc.js')
+          ).toBeFileWithContent();
+          expect(packageObject.scripts['test']).toBe('jest');
+          expect(path.join(appPath, 'jest.config.js')).toBeFileWithContent();
+          expect(
+            path.join(appPath, 'tests/integrationTests/jestSetup.js')
+          ).toBeFileWithContent();
+          expect(
+            path.join(appPath, 'tests/unitTests/jestSetup.js')
+          ).toBeFileWithContent();
+          expect(packageObject.devDependencies).toHaveProperty(
+            'debugger-is-attached'
+          );
+
+          //expect husky correctly installed
+          expect(packageObject.devDependencies).toHaveProperty('husky');
+          expect(packageObject.scripts.prepare).toBe('husky install');
+          expect(path.join(appPath, '.husky/pre-commit')).toHaveLines([
+            'npm run lint:js && npm run format-staged',
+          ]);
+
+          done();
+        } catch (error) {
+          done(error);
         }
-
-        expect(fs.existsSync(appPath)).toBe(true);
-
-        const packageJsonPath = path.join(appPath, 'package.json');
-        expect(packageJsonPath).toBeFileWithContent();
-
-        const packageObject = require(packageJsonPath);
-        expect(packageObject.scripts.test).toBe('jest --coverage');
-        expect(packageObject.scripts.format).toContain('prettier');
-        expect(packageObject.scripts.lint).toContain('eslint .');
-        expect(packageObject.scripts['lint:js']).toBe('eslint .');
-
-        expect(path.join(appPath, '.gitignore')).toHaveLines(['.vscode']);
-
-        expect(path.join(appPath, '.eslintrc.js')).toBeFileWithContent();
-        expect(path.join(appPath, '.prettierrc.json')).toBeFileWithContent();
-        expect(path.join(appPath, '.prettierignore')).toBeFileWithContent();
-
-        //expect Jest correctly installed and configured
-        expect(packageObject.devDependencies).toHaveProperty('jest');
-        expect(packageObject.devDependencies).toHaveProperty(
-          'eslint-plugin-jest'
-        );
-        expect(path.join(appPath, 'tests/.eslintrc.js')).toBeFileWithContent();
-        expect(packageObject.scripts['test']).toBe('jest --coverage');
-        expect(path.join(appPath, 'jest.config.js')).toBeFileWithContent();
-        expect(
-          path.join(appPath, 'tests/integrationTests/jestSetup.js')
-        ).toBeFileWithContent();
-        expect(
-          path.join(appPath, 'tests/unitTests/jestSetup.js')
-        ).toBeFileWithContent();
-        expect(packageObject.devDependencies).toHaveProperty(
-          'debugger-is-attached'
-        );
-
-        //expect husky correctly installed
-        expect(packageObject.devDependencies).toHaveProperty('husky');
-        expect(packageObject.scripts.prepare).toBe('husky install');
-        expect(path.join(appPath, '.husky/pre-commit')).toHaveLines([
-          'npm run format',
-          'npm run lint:js',
-        ]);
-
-        done();
-      } catch (error) {
-        done(error);
       }
-    });
+    );
   });
 });

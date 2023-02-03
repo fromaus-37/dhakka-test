@@ -6,12 +6,16 @@ module.exports = {
     //errors on things like async and arrow functions
     ecmaVersion: 2020,
   },
-  //following block is necessary because otherwise
-  //ESLInt throws error on `require` and `module` keyword
-  //which are of course available in node (because of node's
-  //CommonJS module system) but are not a feature of ES5 or ES6
   env: {
+    //following setting is necessary because otherwise
+    //ESLInt throws error on `require` and `module` keyword
+    //which are of course available in node (because of node's
+    //CommonJS module system) but are not a feature of ES5 or ES6
     node: true,
+
+    //without the following I get error if I create or use
+    //Promise object or its static methods
+    es6: true,
   },
   rules: {
     //following allows us to destructure remaining properties

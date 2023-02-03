@@ -3,19 +3,63 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-trigger:
-  - main
+# Trigger is none and the only way to trigger it is
+# via pr trigger declared in Azure DevOps UI (as this
+# is the only way of registering a pr trigger
+# if the repo is Azure Repos; if the repo were GitHub
+# we would have declared a pr trigger in this file)
+trigger: none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ubuntu-22.04
 
 steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.x'
-    displayName: 'Install Node.js'
+  - template: build-and-test.yml
 
+  # version the pipeline property, as: <current major.minor.patch>-then-pr<pr number>
   - script: |
-      npm install
-      npm run build
-    displayName: 'npm install and build'
+      newver=$(npm pkg get version)
+      # take everything after first double quote
+      newver=${newver#*\"}
+      # take everything before last double quote
+      newver=${newver%\"*}
+      # take everything before first hyphen (will be a no-op if no hyphen found)
+      newver=${newver%%-*}
+      # now append pr number after hyphen to version number we just extracted
+      newver=$newver-pr$(System.PullRequest.PullRequestId)-build$(Build.BuildNumber)
+      echo Version of package deployed to UAT npm registry: $newver
+      # finally, set the new ver number on our package
+      npm pkg set version=$newver
+      # output version number of package for use by a subsequent task
+      # using magic notation to do that using echo
+      echo "##vso[task.setvariable variable=UAT_PACKAGE_VER]$newver"
+    displayName: 'Set version number of package for deployment to UAT Artifacts feed'
+
+  # publish release notes also, as they are a UAT/post-UAT artifact, so just before the final
+  #     deployment's version number is produced
+
+  - task: Npm@1
+    inputs:
+      command: publish
+      publishRegistry: useFeed
+      publishFeed: Dhakka/UAT
+
+  #In task below:
+  #commentType has no effect (all comments are of type text)
+  #status of 4 means Closed (3 is Won't Fix and 5 is Unknown, I didn' try the rest)
+  - powershell: |
+      $body = @"
+      {
+          "comments": [
+            {
+              "parentCommentId": 0,
+              "content": "# Deployed to UAT\n\n\nPackage version [$(UAT_PACKAGE_VER)]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/Npm/dhakka/overview/$(UAT_PACKAGE_VER)) deployed to UAT registry by CI build [#$(Build.BuildNumber)]($(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)&view=results)\n\n**If you have already [connected to the UAT feed]($(System.CollectionUri)$(System.TeamProject)/_artifacts/feed/UAT/connect/npm) then:**\n\n```\nnpm install dhakka@$(UAT_PACKAGE_VER)\n```",
+              "commentType": 1
+            }
+          ],
+          "status": 4
+        }
+      "@
+      $url = "$(System.CollectionUri)$(System.TeamProject)/_apis/git/repositories/Dhakka/pullRequests/$(System.PullRequest.PullRequestId)/threads?api-version=5.1"
+      $result = Invoke-RestMethod -Uri $url -Method POST -Headers @{Authorization = "Bearer $(System.AccessToken)"} -Body $Body -ContentType application/json
+    displayName: Post comment on PR

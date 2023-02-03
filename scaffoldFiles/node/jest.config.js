@@ -18,6 +18,10 @@ module.exports = async () => {
   };
 
   let config = {
+    //any config key/values in configuration (except those
+    //that are to specified in ProjectConfig)
+
+    //project config
     projects: [
       {
         ...baseProjectConfig,
